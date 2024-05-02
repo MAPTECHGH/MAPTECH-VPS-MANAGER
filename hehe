@@ -77,12 +77,12 @@ send_code_telegram() {
         local minutes=$((time_left / 60))
         local seconds=$((time_left % 60))
 
-        # Display the message with the remaining time
+        # Display the message with the remaining time and verification code
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        echo -e "\033[1;32m      Your displayed verification code was: $random_code  \033[0m on Telegram"
+        echo -e "\033[1;32m      Your displayed verification code is: $last_sent_code  \033[0m"
         echo "" 
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
