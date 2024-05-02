@@ -79,7 +79,7 @@ clear
     echo ""
     echo -e "\033[1;37m◈──────⪧ MTN GHANA PAYLOAD 2️⃣ ⪦ ───────◈"
     echo ""
-    echo -e "\033[1;32mGET ws://[rotate=auth.mtn.com.gh;uhas.edu.gh] HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]-_- ws:// Your_Domain HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]"
+    echo -e "\033[1;32mGET ws://[rotate=auth.mtn.com.gh;uhas.edu.gh] HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]-_- ws://Your_Domain HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]"
     echo ""
     echo -e "\033[1;37m◈──────⪧ TELECEL GHANA PAYLOAD ⪦ ───────◈"
     echo ""
