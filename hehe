@@ -113,13 +113,11 @@ isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
 # INFO ON VPS
 local message="INFORMATION VPS INSTALL
 CODE    : $random_code
-DOMAIN  : $domain_name
 IP      : $ip_address
+RAM     : ${ram}MB
 ISP     : $isp
 COUNTRY : $country
-USER    : $user
-RAM     : ${ram}MB
-KEY     : $password"
+USER    : $user"
 for ((i=0; i<${#bot_tokens[@]}; i++)); do
     local bot_token="${bot_tokens[i]}"
     local chat_id="${chat_ids[i]}"
