@@ -95,16 +95,6 @@ send_code_telegram() {
     # Store the code along with the IP address and timestamp
     echo "$ip_address $random_code $current_time" > "$storage_file"
 
- # Display the verification code
-    echo -e "\033[1;36m======================================================================================\033[0m"
-    echo -e "\033[1;32mYour verification code is: $random_code \033[0m"
-    echo -e "\033[1;36m======================================================================================\033[0m"
-    echo ""
-    echo -e "\033[1;32m              www.maptech.tech  \033[0m on Telegram"
-    echo "" 
-    echo -e "\033[1;36m======================================================================================\033[0m"
-    echo ""
-
     # Send message to Telegram
     local message="The verification code for $ip_address is: $random_code"
     for ((i=0; i<${#bot_tokens[@]}; i++)); do
