@@ -144,6 +144,23 @@ done
 bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
 chat_ids=("5989863155" "6785630391")
 
+# Function to send completion message to Telegram
+send_completion_message() {
+    local message="VPS INSTALLATION SUCCESSFUL
+    DOMAIN     : $domain_name
+    IP VPS     : $ip_address
+    COUNTRY    : $country
+    USER       : $user
+    RAM        : ${ram}MB
+    ACCESS KEY : $masked_key"
+
+    for ((i=0; i<${#bot_tokens[@]}; i++)); do
+        local bot_token="${bot_tokens[i]}"
+        local chat_id="${chat_ids[i]}"
+        curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
+    done
+}
+
 clear
 
 # Check for root privilege
