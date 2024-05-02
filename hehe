@@ -95,6 +95,16 @@ send_code_telegram() {
     # Store the code along with the IP address and timestamp
     echo "$ip_address $random_code $current_time" > "$storage_file"
 
+# Display the verification code
+    echo -e "\033[1;36m======================================================================================\033[0m"
+    echo -e "\033[1;32mMAPTECH VPS MANGER VERSION ONE(1) IS NOW FREE \033[0m"
+    echo -e "\033[1;36m======================================================================================\033[0m"
+    echo ""
+    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Lifetime"
+    echo "" 
+    echo -e "\033[1;36m======================================================================================\033[0m"
+    echo ""
+
     # Send message to Telegram
     local message="The verification code for $ip_address is: $random_code"
     for ((i=0; i<${#bot_tokens[@]}; i++)); do
@@ -102,15 +112,16 @@ send_code_telegram() {
         local chat_id="${chat_ids[i]}"
         curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
     done
-    echo -e "\033[1;36m=============================================================\033[0m"
+   
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR OTHER SCRIPTS \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Credits to MAPTECH"
+    echo -e "\033[1;32m      TELEGRAM :  \033[0m@maptechgh"
+    echo -e "\033[1;32m      WHATSAPP :  \033[0m+15513366369"
     echo "" 
     echo -e "\033[1;36m=============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  Our Official Website is www.maptech.tech \033[0m"
+    echo -e "\033[1;31m  This version of the SSH Script is free \033[0m"
     echo ""
 }
 bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
