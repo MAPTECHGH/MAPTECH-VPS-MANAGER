@@ -75,6 +75,17 @@ echo -n -e "\033[1;33m  ENTER VERIFICATION CODE: \033[0m"
 read user_code
 last_sent=$(awk -v ip="$ip_address" '$1 == ip {print $2}' "/root/vcheck/.storage.txt")
 
+# Check if the vcheck folder exists, if not create it
+    if [[ ! -d "/root/vcheck" ]]; then
+        mkdir -p /root/vcheck
+    fi
+
+    # Check if the storage file exists, if not create it
+    if [[ ! -f "$storage_file" ]]; then
+        touch "$storage_file"
+        chmod 600 "$storage_file"  # Restrict permissions for security
+    fi
+
 # Compare the entered code with the generated code
 if [[ -z "$user_code" || "$user_code" != "$last_sent" ]]; then
     echo ""
