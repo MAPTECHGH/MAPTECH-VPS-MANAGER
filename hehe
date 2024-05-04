@@ -1,19 +1,4 @@
 #!/bin/bash
-
-# Prompt user to choose whether to install SSH
-echo -ne "\033[1;36m◇ Do you want to install SSH? [Y/N]: \033[1;37m"
-read install_ssh
-
-if [[ $install_ssh =~ ^[Yy]$ ]]; then
-    # Proceed with SSH installation
-    sed -i 's/Port 22222/Port 22/g' /etc/ssh/sshd_config  > /dev/null 2>&1
-    service ssh restart  > /dev/null 2>&1
-    echo -e "\033[1;32mSSH installation completed successfully!\033[0m"
-else
-    # Skip SSH installation
-    echo -e "\033[1;31mSSH installation skipped.\033[0m"
-fi
-
 clear
 
 # Function to display a progress bar
@@ -62,9 +47,10 @@ verif_key() {
 # Define ip_address as a global variable
 ip_address=$(hostname -I | awk '{print $1}')
 
+
 # Function to send verification code to multiple Telegram handles using different APIs
 send_code_telegram() {
-    local telegram_handle=$1
+     local telegram_handle=$1
     local current_time=$(date +%s)
     local storage_file="/root/vcheck/.storage.txt"  # Hidden file with a dot prefix
 
@@ -120,6 +106,12 @@ send_code_telegram() {
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
 
+    country=$(curl -s https://ipapi.co/country_name/) 
+    user=$(whoami)
+    ram=$(free -m | awk '/^Mem:/{print $2}')
+    isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
+    current_time=$(TZ=Africa/Accra date +"%Y-%m-%d %H:%M:%S")
+
     # INFO ON VPS
     local message="INFORMATION VPS INSTALL (MAPTECH-VPS-MANAGER V1)
     TIME        : $current_time
@@ -135,367 +127,79 @@ send_code_telegram() {
         curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
     done
 
+   
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR OTHER SCRIPTS \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
     echo -e "\033[1;32m      TELEGRAM :  \033[0mhttps://t.me/maptechghbot"
     echo -e "\033[1;32m      WHATSAPP :  \033[0mhttps://wa.me/+15513366369"
-    echo -e "\033[1;32m      WEBSITE  :  \033[0mwww.maptech.tech"
-    echo "" 
-    echo -e "\033[1;36m=============================================================\033[0m"
+    echo -e "\033[1;32m      WEBSITE  :  \033[0mhttps://www.maptechgh.com"
     echo ""
-    echo -e "\033[1;31m          M A P T E C H - G H \033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-}
 
-bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
-chat_ids=("5989863155" "6785630391")
+}
 
 # Function to send completion message to Telegram
 send_completion_message() {
-    local message="VPS INSTALLATION SUCCESSFUL (MAPTECH-VPS-MANAGER V1)
-    TIME___      : $current_time
-    DOMAIN_      : $domain_name
-    IP VPS_      : $ip_address
-    RAM____      : ${ram}MB
-    ISP____      : $isp
-    COUNTRY      : $country
-    USER___      : $user"
-
-    for ((i=0; i<${#bot_tokens[@]}; i++)); do
-        local bot_token="${bot_tokens[i]}"
-        local chat_id="${chat_ids[i]}"
-        curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
-    done
+    # Function code here...
 }
-
-clear
 
 # Check for root privilege
 [[ "$(whoami)" != "root" ]] && {
-    echo -e "\033[1;33m[\033[1;31mErro\033[1;33m] \033[1;37m- \033[1;33m◇ YOU NEED TO RUN AS ROOT!\033[0m"
+    echo -e "\033[1;33m[\033[1;31mError\033[1;33m] \033[1;37m- \033[1;33mYou need to run as root!\033[0m"
     exit 0
 }
 
-# Generate and send the verification code
-send_code_telegram
+# Prompt the user if they want to proceed with the main installation
+echo -ne "\033[1;33mDo you want to proceed with the main installation? [Y/N]: \033[0m"
+read proceed_main_installation
 
-# Prompt the user to enter the verification code
-echo -n -e "\033[1;33m  ENTER VERIFICATION CODE: \033[0m"
-read user_code
-last_sent=$(awk -v ip="$ip_address" '$1 == ip {print $2}' "/root/vcheck/.storage.txt")
+if [[ $proceed_main_installation =~ ^[Yy]$ ]]; then
+    # Generate and send the verification code
+    send_code_telegram
 
-# Compare the entered code with the generated code
-if [[ -z "$user_code" || "$user_code" != "$last_sent" ]]; then
-    echo ""
-    echo -e "\033[1;35mInvalid code. Installation aborted.\033[0m"
-    echo ""
-    exit 1
-else
-    rm -rf /root/vcheck
-fi
-clear
+    # Prompt the user to enter the verification code
+    echo -n -e "\033[1;33mEnter verification code: \033[0m"
+    read user_code
+    last_sent=$(awk -v ip="$ip_address" '$1 == ip {print $2}' "/root/vcheck/.storage.txt")
 
-# Variable Initialization
-_lnk=$(echo 'z1:y#x.5s0ul&p4hs$s.0a72d*n-e!v89e032:3r'| sed -e 's/[^a-z.]//ig'| rev)
-_Ink=$(echo '/3×u3#s87r/l32o4×c1a×l1/83×l24×i0b×'|sed -e 's/[^a-z/]//ig')
-_1nk=$(echo '/3×u3#s×87r/83×l2×4×i0b×'|sed -e 's/[^a-z/]//ig')
-
-# Welcome message
-echo -e "\033[1;31m\033[0m"
-tput setaf 7 ; tput setab 4 ; tput bold ; printf '%40s%s%-12s\n' "◇─────────ㅤ🌍WELCOME TO MAPTECH VPS MANAGER🌍ㅤ─────────◇" ; tput sgr0
-echo ""
-echo -e "\033[1;33mㅤTHIS SCRIPT CONTAINS THE FOLLOWING!!\033[0m"
-echo ""
-echo -e "\033[1;33m◇ \033[1;32mINSTALL A SET OF SCRIPTS AS TOOLS FOR\033[0m"
-echo ""
-echo -e "\033[1;33m◇  \033[1;32mNETWORK, SYSTEM AND USER MANAGEMENT.\033[0m"
-echo -e "\033[1;33m◇  \033[1;32mEASY INTERFACE FOR BEGINNERS.\033[0m"
-echo ""
-echo -e "\033[1;31m◇──────────────ㅤ🌍 MAPTECH VPS MANAGER 🌍ㅤ──────────────◇\033[0m"
-echo ""
-
-# Prompt to continue
-echo -ne "\033[1;36m◇ Do you want to continue? [Y/N]: \033[1;37m"
-read x
-[[ $x = @(n|N) ]] && exit
-
-# Modify SSH configuration and restart service
-sed -i 's/Port 22222/Port 22/g' /etc/ssh/sshd_config  > /dev/null 2>&1
-service ssh restart  > /dev/null 2>&1
-
-# Prompt user if they want to add a domain name
-echo -ne "\033[1;36m◇ Do you want to add a domain name? [Y/N]: \033[0m"
-read add_domain
-echo ""
-echo -e "\033[1;32m>>> Please make sure your DOMAIN is linked to Cloudflare for proper functionality <<<\033[0m"
-
-if [[ "$add_domain" == "Y" || "$add_domain" == "y" ]]; then
-    domain_attempts=0
-    while [[ $domain_attempts -lt 3 ]]; do
-        # Prompt user to enter domain name
+    # Compare the entered code with the generated code
+    if [[ -z "$user_code" || "$user_code" != "$last_sent" ]]; then
         echo ""
-        echo -ne "\033[1;36m◇ Please enter your domain name (e.g., example.com): \033[0m"
-        read domain_name
-
-        # Check if the domain name resolves to an IP address
-        domain_ip=$(dig +short "$domain_name" | head -n1)
-        if [[ -n "$domain_ip" ]]; then
-            # Update the domain name in the configuration files
-            sed -i "s/domainname.com/$domain_name/g" $_lnk/main > /dev/null 2>&1
-            sed -i "s/domainname.com/$domain_name/g" $_lnk/main > /dev/null 2>&1
-            sed -i "s/127.0.0.1/$ip_address/g" $_lnk/main > /dev/null 2>&1
-
-            # Update the domain name in the Caddyfile
-            sed -i "s/domainname.com/$domain_name/g" /etc/caddy/Caddyfile > /dev/null 2>&1
-
-            # Restart Caddy service
-            systemctl restart caddy > /dev/null 2>&1
-
-            echo ""
-            echo -e "\033[1;32m◇ Domain name has been successfully configured!\033[0m"
-            echo ""
-            break
-        else
-            echo ""
-            echo -e "\033[1;31m◇ Failed to resolve the domain name to an IP address. Please ensure the domain is properly configured and try again.\033[0m"
-            ((domain_attempts++))
-        fi
-    done
-
-    if [[ $domain_attempts -ge 3 ]]; then
+        echo -e "\033[1;35mInvalid code. Installation aborted.\033[0m"
         echo ""
-        echo -e "\033[1;31m◇ Maximum attempts reached. Skipping domain name configuration.\033[0m"
+        exit 1
+    else
+        rm -rf /root/vcheck
     fi
+else
+    echo -e "\033[1;33mSkipping main installation.\033[0m"
 fi
 
-# Prompt to install WireGuard
-echo -ne "\033[1;36m◇ Do you want to install WireGuard? [Y/N]: \033[1;37m"
-read install_wireguard
-
-if [[ $install_wireguard =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/wireguard.sh" "$_1nk/wireguard.sh"  > /dev/null 2>&1
-    sed -i 's/#ClientConfig/ClientConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan
-echo -ne "\033[1;36m◇ Do you want to install Trojan? [Y/N]: \033[1;37m"
-read install_trojan
-
-if [[ $install_trojan =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan.sh" "$_1nk/trojan.sh"  > /dev/null 2>&1
-    sed -i 's/#TrojanConfig/TrojanConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install V2Ray
-echo -ne "\033[1;36m◇ Do you want to install V2Ray? [Y/N]: \033[1;37m"
-read install_v2ray
-
-if [[ $install_v2ray =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/v2ray.sh" "$_1nk/v2ray.sh"  > /dev/null 2>&1
-    sed -i 's/#V2RayConfig/V2RayConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan-go
-echo -ne "\033[1;36m◇ Do you want to install Trojan-go? [Y/N]: \033[1;37m"
-read install_trojan_go
-
-if [[ $install_trojan_go =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan-go.sh" "$_1nk/trojan-go.sh"  > /dev/null 2>&1
-    sed -i 's/#TrojanGoConfig/TrojanGoConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install L2TP
-echo -ne "\033[1;36m◇ Do you want to install L2TP? [Y/N]: \033[1;37m"
-read install_l2tp
-
-if [[ $install_l2tp =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/l2tp.sh" "$_1nk/l2tp.sh"  > /dev/null 2>&1
-    sed -i 's/#L2TPConfig/L2TPConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install SSSR
-echo -ne "\033[1;36m◇ Do you want to install SSSR? [Y/N]: \033[1;37m"
-read install_sssr
-
-if [[ $install_sssr =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/sssr.sh" "$_1nk/sssr.sh"  > /dev/null 2>&1
-    sed -i 's/#SSSRConfig/SSSRConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install Xray
-echo -ne "\033[1;36m◇ Do you want to install Xray? [Y/N]: \033[1;37m"
-read install_xray
-
-if [[ $install_xray =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/xray.sh" "$_1nk/xray.sh"  > /dev/null 2>&1
-    sed -i 's/#XrayConfig/XrayConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install Shadowsocks
-echo -ne "\033[1;36m◇ Do you want to install Shadowsocks? [Y/N]: \033[1;37m"
-read install_ss
-
-if [[ $install_ss =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/shadowsocks.sh" "$_1nk/shadowsocks.sh"  > /dev/null 2>&1
-    sed -i 's/#ShadowsocksConfig/ShadowsocksConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install SSH Plus
-echo -ne "\033[1;36m◇ Do you want to install SSH Plus? [Y/N]: \033[1;37m"
-read install_ssh_plus
-
-if [[ $install_ssh_plus =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/sshplus.sh" "$_1nk/sshplus.sh"  > /dev/null 2>&1
-    sed -i 's/#SSHPlusConfig/SSHPlusConfig/g' $_lnk/main > /dev/null 2>&1
-    systemctl restart caddy > /dev/null 2>&1
-fi
-
-# Prompt to install Panel
-echo -ne "\033[1;36m◇ Do you want to install Panel? [Y/N]: \033[1;37m"
-read install_panel
-
-if [[ $install_panel =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/panel.sh" "$_1nk/panel.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install V2Ray Manager
-echo -ne "\033[1;36m◇ Do you want to install V2Ray Manager? [Y/N]: \033[1;37m"
-read install_v2ray_manager
-
-if [[ $install_v2ray_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/v2ray-manager.sh" "$_1nk/v2ray-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install SSR Manager
-echo -ne "\033[1;36m◇ Do you want to install SSR Manager? [Y/N]: \033[1;37m"
-read install_ssr_manager
-
-if [[ $install_ssr_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/ssr-manager.sh" "$_1nk/ssr-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install SSSR Manager
-echo -ne "\033[1;36m◇ Do you want to install SSSR Manager? [Y/N]: \033[1;37m"
-read install_sssr_manager
-
-if [[ $install_sssr_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/sssr-manager.sh" "$_1nk/sssr-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan Manager
-echo -ne "\033[1;36m◇ Do you want to install Trojan Manager? [Y/N]: \033[1;37m"
-read install_trojan_manager
-
-if [[ $install_trojan_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan-manager.sh" "$_1nk/trojan-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan-go Manager
-echo -ne "\033[1;36m◇ Do you want to install Trojan-go Manager? [Y/N]: \033[1;37m"
-read install_trojan_go_manager
-
-if [[ $install_trojan_go_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan-go-manager.sh" "$_1nk/trojan-go-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install L2TP Manager
-echo -ne "\033[1;36m◇ Do you want to install L2TP Manager? [Y/N]: \033[1;37m"
-read install_l2tp_manager
-
-if [[ $install_l2tp_manager =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/l2tp-manager.sh" "$_1nk/l2tp-manager.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install V2Ray Status
-echo -ne "\033[1;36m◇ Do you want to install V2Ray Status? [Y/N]: \033[1;37m"
-read install_v2ray_status
-
-if [[ $install_v2ray_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/v2ray-status.sh" "$_1nk/v2ray-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan Status
-echo -ne "\033[1;36m◇ Do you want to install Trojan Status? [Y/N]: \033[1;37m"
-read install_trojan_status
-
-if [[ $install_trojan_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan-status.sh" "$_1nk/trojan-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Trojan-go Status
-echo -ne "\033[1;36m◇ Do you want to install Trojan-go Status? [Y/N]: \033[1;37m"
-read install_trojan_go_status
-
-if [[ $install_trojan_go_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/trojan-go-status.sh" "$_1nk/trojan-go-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install WireGuard Status
-echo -ne "\033[1;36m◇ Do you want to install WireGuard Status? [Y/N]: \033[1;37m"
-read install_wireguard_status
-
-if [[ $install_wireguard_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/wireguard-status.sh" "$_1nk/wireguard-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install L2TP Status
-echo -ne "\033[1;36m◇ Do you want to install L2TP Status? [Y/N]: \033[1;37m"
-read install_l2tp_status
-
-if [[ $install_l2tp_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/l2tp-status.sh" "$_1nk/l2tp-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install SSSR Status
-echo -ne "\033[1;36m◇ Do you want to install SSSR Status? [Y/N]: \033[1;37m"
-read install_sssr_status
-
-if [[ $install_sssr_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/sssr-status.sh" "$_1nk/sssr-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Xray Status
-echo -ne "\033[1;36m◇ Do you want to install Xray Status? [Y/N]: \033[1;37m"
-read install_xray_status
-
-if [[ $install_xray_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/xray-status.sh" "$_1nk/xray-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install Panel Status
-echo -ne "\033[1;36m◇ Do you want to install Panel Status? [Y/N]: \033[1;37m"
-read install_panel_status
-
-if [[ $install_panel_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/panel-status.sh" "$_1nk/panel-status.sh"  > /dev/null 2>&1
-fi
-
-# Prompt to install SSH Plus Status
-echo -ne "\033[1;36m◇ Do you want to install SSH Plus Status? [Y/N]: \033[1;37m"
-read install_ssh_plus_status
-
-if [[ $install_ssh_plus_status =~ ^[Yy]$ ]]; then
-    fun_bar "$_Ink/sshplus-status.sh" "$_1nk/sshplus-status.sh"  > /dev/null 2>&1
-fi
-
-# Final installation completion message
-echo ""
-echo -e "\033[1;32mAll selected components installed successfully!\033[0m"
-echo ""
-
-# Send completion message to Telegram
-send_completion_message
-
-# Final message
-echo ""
-echo -e "\033[1;32m◇ Thank you for choosing Maptech VPS Manager! Visit our website at www.maptech.tech for updates and support.\033[0m"
-echo ""
+#Option to install UDP script
+echo "Choose an option:"
+echo "1. Install UDP-REQUEST"
+echo "2. Install UDP-CUSTOM"
+echo "3. Exit"
+read -p "Enter the number corresponding to your choice: " choice
+case "$choice" in
+  1 ) 
+    wget https://raw.githubusercontent.com/MAPTECHGH/SocksIP-udpServer/main/UDPserver.sh && 
+    chmod +x UDPserver.sh && 
+    ./UDPserver.sh
+    ;;
+  2 ) 
+    git clone https://github.com/MAPTECHGH/Udpcustom.git && 
+    cd Udpcustom && 
+    chmod +x install.sh && 
+    ./install.sh
+    ;;
+  3 ) 
+    echo "Exiting now."
+    exit 0
+    ;;
+  * ) 
+    echo "Invalid choice. Please enter either '1' for UDP-REQUEST, '2' for UDP-CUSTOM, or '3' to exit."
+    ;;
+esac
