@@ -112,8 +112,6 @@ fun_bar() {
     tput cnorm
 }
 
-# Function to verify key
-verif_key() {
    # Function to verify key
 verif_key() {
     krm=$(echo '5:q-3gs2.o7%8:1'|rev)
