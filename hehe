@@ -1,8 +1,12 @@
 # Prompt for user selection
-echo "After entering the verification code, please select an option:"
-echo "1. Continue installation"
-echo "2. Abort installation and install UDP request"
-echo "3. Install UDP custom"
+echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+echo "┃          🚀 Welcome to MAPTECHS VPS SCRIPT INSTALLATION 🚀           ┃"  
+echo "┃             Please Select an Option Below to Install the Protocol:             ┃"
+echo "┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫"
+echo "┃   1. SSH Protocol                                    ┃"
+echo "┃   2. Install UDP Request                           ┃"
+echo "┃   3. Install UDP Custom                            ┃"
+echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
 read -p "Enter the number corresponding to your choice: " choice
 case "$choice" in
     1 ) 
