@@ -4,13 +4,13 @@
 display_menu() {
     echo -e "\033[1;33m"
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    echo "           Please select a protocol to install it on your vps:"
+    echo "           Please select a protocol to install on your vps:"
     echo "  ┌────────────────────────────────────────────────────────────────────┐"
-    echo "  │ 1. Continue installation                                            │"
-    echo "  │ 2. Abort installation and install UDP request                       │"
-    echo "  │ 3. Install UDP custom                                               │"
+    echo "  │ 1. SSH                                                              │"
+    echo "  │ 2. UDP-REQUEST                                                      │"
+    echo "  │ 3. UDP-CUSTOM                                                       │"
     echo "  └────────────────────────────────────────────────────────────────────┘"
-    echo "     Designed by :     TEAM-MAPTECH on telegram as @maptechghbot "
+    echo "    Designed by :     TEAM-MAPTECH.    On telegram as @maptechghbot "
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
     echo -e "\033[0m"
 }
