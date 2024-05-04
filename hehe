@@ -1,69 +1,5 @@
 #!/bin/bash
 
-# Global variables
-MAX_TRIALS=3
-TRIALS=0
-
-# Function to generate a random password
-generate_random_password() {
-    # Generate a random password of length 10
-    password=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | head -c 10)
-    echo "$password"
-}
-
-# Function to send the generated password to Telegram bot
-send_password_to_telegram() {
-    local password="$1"
-    curl -s -X POST "https://api.telegram.org/bot6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE/sendMessage" \
-    -d "chat_id=5989863155" \
-    -d "text=Generated Password: $password" > /dev/null
-}
-
-# Function to prompt the user to enter the password for validation
-prompt_for_password() {
-    echo -e "\033[1;33m"
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    echo "  Please enter the password sent to your Telegram handle:"
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    echo -e "\033[0m"
-    read -s -p "Enter password: " entered_password
-}
-
-# Function to validate the entered password
-validate_password() {
-    local entered_password="$1"
-    local expected_password="$2"
-    if [[ "$entered_password" == "$expected_password" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Function to handle password validation attempts
-handle_password_validation() {
-    local generated_password="$1"
-    local entered_password
-    local validation_result
-    
-    while [[ $TRIALS -lt $MAX_TRIALS ]]; do
-        prompt_for_password
-        validation_result=$(validate_password "$entered_password" "$generated_password")
-        if [[ $validation_result -eq 0 ]]; then
-            echo "Password validation successful. Proceeding with installation..."
-            display_menu
-            return
-        else
-            let "TRIALS++"
-            echo "Invalid password. You have $((MAX_TRIALS - TRIALS)) trials left."
-        fi
-    done
-    
-    # Exit if maximum trials reached
-    echo "Maximum number of trials reached. Exiting..."
-    exit 1
-}
-
 # Function to display the installation menu
 display_menu() {
     echo -e "\033[1;33m"
@@ -78,17 +14,6 @@ display_menu() {
     echo -e "\033[0m"
 }
 
-# Main function to handle password generation, sending, and validation
-main() {
-    local generated_password
-    
-    # Generate a random password and send it to Telegram
-    generated_password=$(generate_random_password)
-    send_password_to_telegram "$generated_password"
-    
-    # Handle password validation attempts
-    handle_password_validation "$generated_password"
-}
 
 # Function to display a progress bar
 fun_bar() {
