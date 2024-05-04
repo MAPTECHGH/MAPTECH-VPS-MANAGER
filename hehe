@@ -97,7 +97,7 @@ send_code_telegram() {
 
 # Display the verification code
     echo -e "\033[1;36m==============================================================\033[0m"
-    echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE(1) IS NOW FREE \033[0m"
+    echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE (1) \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
     echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Lifetime"
@@ -112,7 +112,7 @@ isp=$(curl -s ipinfo.io/org | cut -d " " -f2-)
 current_time=$(TZ=Africa/Accra date +"%Y-%m-%d %H:%M:%S")
 
 # INFO ON VPS
-local message="INFORMATION VPS INSTALL
+local message="INFORMATION VPS INSTALL (MAPTECH-VPS-MANAGER V1)
 TIME        : $current_time
 CODE        : $random_code
 IP          : $ip_address
@@ -132,6 +132,7 @@ done
     echo ""
     echo -e "\033[1;32m      TELEGRAM :  \033[0mhttps://t.me/maptechghbot"
     echo -e "\033[1;32m      WHATSAPP :  \033[0mhttps://wa.me/+15513366369"
+    echo -e "\033[1;32m      WEBSITE  :  \033[0mwww.maptech.tech"
     echo "" 
     echo -e "\033[1;36m=============================================================\033[0m"
     echo ""
@@ -143,7 +144,7 @@ chat_ids=("5989863155" "6785630391")
 
 # Function to send completion message to Telegram
 send_completion_message() {
-    local message="VPS INSTALLATION SUCCESSFUL
+    local message="VPS INSTALLATION SUCCESSFUL (MAPTECH-VPS-MANAGER V1)
     TIME___      : $current_time
     DOMAIN_      : $domain_name
     IP VPS_      : $ip_address
