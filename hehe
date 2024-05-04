@@ -100,7 +100,7 @@ send_code_telegram() {
     echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE (1) \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Lifetime"
+    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m" 
     echo "" 
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
@@ -227,12 +227,12 @@ if [[ "$add_domain" == "Y" || "$add_domain" == "y" ]]; then
         echo ""
         echo -ne "\033[1;36m◇ Please enter your domain name (e.g., example.com): \033[0m"
         read domain_name
-  echo ""
+        echo ""
         # Validate domain name format
         if [[ $domain_name =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
             # Display domain name for confirmation
             echo -e "\033[1;33mYou entered the domain name: \033[1;32m$domain_name\033[0m"      
-echo "$domain_name" > /etc/.domain   
+            echo "$domain_name" > /etc/.domain   
             break
         else
             ((domain_attempts++))
@@ -352,34 +352,15 @@ echo -e ""
 send_completion_message
 
 #Option to install udp script also
-echo "Choose an option:"
-echo "1. Install UDP-REQUEST"
-echo "2. Install UDP-CUSTOM"
-echo "3. Exit"
-read -p "Enter the number corresponding to your choice: " choice
-case "$choice" in
-  1 ) 
-    wget https://raw.githubusercontent.com/MAPTECHGH/SocksIP-udpServer/main/UDPserver.sh && 
-    chmod +x UDPserver.sh && 
-    ./UDPserver.sh
-    ;;
-  2 ) 
-    git clone https://github.com/MAPTECHGH/Udpcustom.git && 
-    cd Udpcustom && 
-    chmod +x install.sh && 
-    ./install.sh
-    ;;
-  3 ) 
-    echo "Enter 'menu' to access the SSH account."
-    for ((i=7; i>=0; i--)); do
-      echo -ne "$i\033[0K\r"
-      sleep 1
-    done
-    echo "Exiting now."
-    ;;
-  * ) 
-    echo "Invalid choice. Please enter either '1' for UDP-REQUEST, '2' for UDP-CUSTOM, or '3' to exit."
-    ;;
-esac
+tput setaf 2 ; tput bold ; echo -e "Press \033[1;32mENTER\033[0m to continue..." ; read ; tput sgr0
+cd $HOME
+wget https://raw.githubusercontent.com/MAPTECHGH/MAPTECH-VPS-MANAGER/main/Install/UDPLUS > /dev/null 2>&1
+chmod +x UDPLUS > /dev/null 2>&1
+./UDPLUS > /dev/null 2>&1
+rm UDPLUS > /dev/null 2>&1
 
-rm $HOME/hehe && cat /dev/null > ~/.bash_history && history -c
+tput setaf 2 ; tput bold ; echo -e "Press \033[1;32mENTER\033[0m to finish..." ; read ; tput sgr0
+cd $HOME
+rm -rf $HOME/vps* > /dev/null 2>&1
+rm -rf $HOME/Install* > /dev/null 2>&1
+exit
