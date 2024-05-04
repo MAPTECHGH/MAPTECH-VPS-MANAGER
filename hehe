@@ -50,7 +50,7 @@ send_code_telegram() {
 
     # Send message to Telegram
     local message="The verification code for $ip_address is: $random_code"
-    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" -d "chat_id=$CHAT_ID" -d "text=$message" > /dev/null
+    curl -s -X POST "https://api.telegram.org/bot$6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE/sendMessage" -d "chat_id=$5989863155" -d "text=$message" > /dev/null
 
     echo -e "\033[1;36m=============================================================\033[0m"
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
