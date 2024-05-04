@@ -370,8 +370,8 @@ case "$choice" in
     ;;
   3 ) 
     echo "Enter 'menu' to access the SSH account."
-    for ((i=7; i>0; i--)); do
-      echo -n "Exiting in $i seconds... "
+    for ((i=7; i>=0; i--)); do
+      echo -ne "$i\033[0K\r"
       sleep 1
     done
     echo "Exiting now."
