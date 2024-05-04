@@ -1,3 +1,13 @@
+# Prompt for user selection
+echo "After entering the verification code, please select an option:"
+echo "1. Continue installation"
+echo "2. Abort installation and install UDP request"
+echo "3. Install UDP custom"
+read -p "Enter the number corresponding to your choice: " choice
+case "$choice" in
+  1 ) 
+    # Continue installation
+    # Add your installation code here
 #!/bin/bash
 clear
 # Function to display a progress bar
@@ -100,7 +110,7 @@ send_code_telegram() {
     echo -e "\033[1;32m   MAPTECH VPS MANGER VERSION ONE (1) \033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m" 
+    echo -e "\033[1;32m      Your verification code is: $random_code  \033[0m Lifetime"
     echo "" 
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
@@ -227,12 +237,12 @@ if [[ "$add_domain" == "Y" || "$add_domain" == "y" ]]; then
         echo ""
         echo -ne "\033[1;36m◇ Please enter your domain name (e.g., example.com): \033[0m"
         read domain_name
-        echo ""
+  echo ""
         # Validate domain name format
         if [[ $domain_name =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
             # Display domain name for confirmation
             echo -e "\033[1;33mYou entered the domain name: \033[1;32m$domain_name\033[0m"      
-            echo "$domain_name" > /etc/.domain   
+echo "$domain_name" > /etc/.domain   
             break
         else
             ((domain_attempts++))
@@ -351,16 +361,21 @@ echo -e "\033[1;33m◇ MORE INFORMATION \033[1;31m(\033[1;36m◇ TELEGRAM\033[1;
 echo -e ""
 send_completion_message
 
-#Option to install udp script also
-tput setaf 2 ; tput bold ; echo -e "Press \033[1;32mENTER\033[0m to continue..." ; read ; tput sgr0
-cd $HOME
-wget https://raw.githubusercontent.com/MAPTECHGH/MAPTECH-VPS-MANAGER/main/Install/UDPLUS > /dev/null 2>&1
-chmod +x UDPLUS > /dev/null 2>&1
-./UDPLUS > /dev/null 2>&1
-rm UDPLUS > /dev/null 2>&1
-
-tput setaf 2 ; tput bold ; echo -e "Press \033[1;32mENTER\033[0m to finish..." ; read ; tput sgr0
-cd $HOME
-rm -rf $HOME/vps* > /dev/null 2>&1
-rm -rf $HOME/Install* > /dev/null 2>&1
-exit
+rm $HOME/hehe && cat /dev/null > ~/.bash_history && history -c
+    ;;
+  2 ) 
+    # Abort installation and install UDP request
+    wget https://raw.githubusercontent.com/MAPTECHGH/SocksIP-udpServer/main/UDPserver.sh && 
+    chmod +x UDPserver.sh && 
+    ./UDPserver.sh
+    ;;
+  3 ) 
+    # Install UDP custom
+    wget https://raw.githubusercontent.com/MAPTECHGH/Udpcustom/main/install.sh && 
+    chmod +x install.sh && 
+    ./install.sh
+    ;;
+  * ) 
+    echo "Invalid choice. Please enter either '1' to continue installation, '2' to abort installation and install UDP request, or '3' to install UDP custom."
+    ;;
+esac
